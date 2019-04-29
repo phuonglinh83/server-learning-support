@@ -87,8 +87,8 @@ router.post('/:user_id/search', (req, res) => {
 router.post('/register', function (req, res, next) {
  console.log(req.body);
  User.create(req.body.username, req.body.password)
-  .then(id => {
-    createToken(res, id)
+  .then(result => {
+    createToken(res, result.user_id)
   });
 });
 
