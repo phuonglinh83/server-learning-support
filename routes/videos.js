@@ -30,4 +30,23 @@ router.post('/:video_id/activity/:user_id', (req, res) => {
   });
 });
 
+router.get('/:video_id/comments', (req, res) => {
+  Video.getComments(req.params.video_id).then (result => {
+    res.status(200).json(result);
+  }).catch (error => {
+    console.log(error);
+    res.status(200).json();
+  });
+});
+
+router.post('/:video_id/comment/:user_id', (req, res) => {
+  console.log(req.body);
+  Video.inserComment(req.params.video_id, req.params.user_id, req.body.content).then (result => {
+    res.status(200).json();
+  }).catch (error => {
+    console.log("Error: " + error);
+    res.status(500).json();
+  });
+});
+
 module.exports = router;

@@ -25,9 +25,21 @@ const updateActivity = (video_id, user_id, action, count) =>
           DO UPDATE SET count=$4, last_modified=to_timestamp($5);`,
           [user_id, video_id, action, count, Date.now()/1000]);
 
+const inserComment = (video_id, user_id, content) =>
+  db.none(`INSERT INTO comments (user_id, video_id, created_time, content)
+           VALUES ($1, $2, to_timestamp($4), $3);`,
+           [user_id, video_id, content, Date.now()/1000]);
+
+const getComments = (video_id, user_id) =>
+  db.any(`SELECT username, content, created_time
+          FROM comments as c, users as u
+          WHERE video_id = $1 AND u.user_id = c.user_id
+          ORDER BY created_time DESC;`, [video_id]);
 module.exports = {
  getRandomK,
  getSimilarK,
  getActivity,
- updateActivity
+ updateActivity,
+ getComments,
+ inserComment
 };
