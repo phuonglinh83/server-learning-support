@@ -38,8 +38,17 @@ router.post('/login',function(req, res) {
     }
   });
 
-router.get('/find', auth.authenticate(), (req, res) => {
-  res.json({user:1});
+// router.get('/find', auth.authenticate(), (req, res) => {
+//   res.json({user:1});
+// });
+
+router.post('/find', (req, res) => {
+  console.log(req.body);
+  User.findUsername(req.body.username).then (user => {
+    res.status(200).json({user_id: user.user_id});
+  }).catch (error => {
+    res.status(200).json({user_id: -1});
+  });
 });
 
 router.get('/:user_id/recommend/:top_k', (req, res) => {
@@ -88,7 +97,12 @@ router.post('/register', function (req, res, next) {
  console.log(req.body);
  User.create(req.body.username, req.body.password)
   .then(result => {
-    createToken(res, result.user_id)
+    Video.updateActivity(1, result.user_id, 'WATCH', 0);
+    Video.updateActivity(2, result.user_id, 'WATCH', 0);
+    createToken(res, result.user_id);
+  }).catch(error => {
+    console.log(error);
+    res.sendStatus(401);
   });
 });
 

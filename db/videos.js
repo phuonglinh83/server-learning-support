@@ -35,11 +35,19 @@ const getComments = (video_id, user_id) =>
           FROM comments as c, users as u
           WHERE video_id = $1 AND u.user_id = c.user_id
           ORDER BY created_time DESC;`, [video_id]);
+
+const getCategories = (video_id) =>
+  db.any(`SELECT name
+          FROM videos_categories as v, categories as c
+          WHERE video_id = $1 AND v.category_id = c.category_id
+          ORDER BY name;`, [video_id]);
+
 module.exports = {
  getRandomK,
  getSimilarK,
  getActivity,
  updateActivity,
  getComments,
- inserComment
+ inserComment,
+ getCategories
 };

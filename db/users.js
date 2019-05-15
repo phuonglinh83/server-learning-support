@@ -5,10 +5,11 @@ const CREATE_QUERY =
  'INSERT INTO users (username, password) VALUES (${username}, ${hash}) RETURNING user_id';
 
 const create = (username, password) =>
- bcrypt.hash(password, 10).then(hash => db.one(CREATE_QUERY, {
-  username,
-  hash
- }));
+  bcrypt.hash(password, 10).then(hash => db.one(CREATE_QUERY, {username, hash}));
+  // .then(user_id =>
+  //   db.none(`INSERT INTO activities (user_id, video_id, action, count, last_modified)
+  //           VALUES ($1, 1, 'WATCH', 0, to_timestamp($2))`),
+  //           [user_id, Date.now()/1000]);
 
 const findUsername = username =>
  db.one('SELECT * FROM users WHERE username=${username}', {
@@ -23,14 +24,14 @@ const findUserId = id =>
 const getRecommendations = (id, top_k) =>
  db.many(`SELECT v.video_id, youtube_id, title, description
          FROM videos as v, recommendations as r
-         WHERE r.video_id=v.video_id and r.user_id=$1
+         WHERE r.video_id=v.video_id and r.user_id=$1 and r.score > 0.5
          ORDER BY r.score desc
          LIMIT $2`, [id, top_k]);
 
 const getHistory = (id) =>
  db.any(`SELECT v.video_id, youtube_id, title, description, last_modified
           FROM videos as v, activities as a
-          WHERE v.video_id=a.video_id and a.user_id=$1 and action = 'WATCH'
+          WHERE v.video_id=a.video_id and a.user_id=$1 and action = 'WATCH' and count > 0
           ORDER BY last_modified desc`, [id]);
 
 const getFavorites = (id) =>
