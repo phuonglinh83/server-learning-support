@@ -38,9 +38,14 @@ router.post('/login',function(req, res) {
     }
   });
 
-// router.get('/find', auth.authenticate(), (req, res) => {
-//   res.json({user:1});
-// });
+router.get('/findUser', auth.authenticate(), (req, res) => {
+  res.json({user:1});
+});
+
+router.get('/findUser1', (req, res) => {
+  console.log(req.headers);
+  res.json({user:1});
+});
 
 router.post('/find', (req, res) => {
   console.log(req.body);
@@ -51,7 +56,8 @@ router.post('/find', (req, res) => {
   });
 });
 
-router.get('/:user_id/recommend/:top_k', (req, res) => {
+router.get('/:user_id/recommend/:top_k', auth.authenticate(), (req, res) => {
+  console.log(req.headers);
   User.getRecommendations(req.params.user_id, req.params.top_k).then (result => {
     res.status(200).json(result);
   }).catch (error => {

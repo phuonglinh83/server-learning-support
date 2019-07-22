@@ -1,17 +1,18 @@
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
-const users = require("../db/users.js");
+const User = require("../db/users.js");
 const cfg = require("./config.js");
 const ExtractJwt = passportJWT.ExtractJwt;
 const Strategy = passportJWT.Strategy;
 const params = {
     secretOrKey: cfg.jwtSecret,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+    // jwtFromRequest: ExtractJwt.fromHeader('authtest')
 };
 
 const strategy = new Strategy(params, function(payload, done) {
       User.findUserId(payload.id)
-      .then(user => done(null, {id: user.id}))
+      .then(user => done(null, {id: user.user_id}))
       .catch(error => done(new Error("User not found"), null));
     });
 passport.use(strategy);

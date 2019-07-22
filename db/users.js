@@ -16,7 +16,7 @@ const findUsername = username =>
   username
  });
 
-const findUserId = id =>
+const findUserId = id => 
  db.one('SELECT * FROM users WHERE user_id=${id}', {
   id
 });
