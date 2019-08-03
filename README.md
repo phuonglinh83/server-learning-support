@@ -10,7 +10,7 @@
 * Create database env file
 ```
 touch .env
-echo DATABASE_URL=postgres://`whoami`@localhost:5432/thesis >> .env
+echo DATABASE_URL=postgres://`whoami`@localhost:5432/<db_name> >> .env
 ```
 * Install required packages
 ```
