@@ -16,10 +16,6 @@ echo DATABASE_URL=postgres://`whoami`@localhost:5432/<db_name> >> .env
 ```
 npm install
 ```
-* Create role thesis in with psql
-```
-CREATE ROLE thesis LOGIN PASSWORD 'thesispass';
-```
 * Set up database, and load intial data for cards table:
 ```
 bin/resetDB.sh
