@@ -56,7 +56,7 @@ router.post('/find', (req, res) => {
   });
 });
 
-router.get('/:user_id/recommend/:top_k', auth.authenticate(), (req, res) => {
+router.get('/:user_id/recommend/:top_k', (req, res) => {
   console.log(req.headers);
   User.getRecommendations(req.params.user_id, req.params.top_k).then (result => {
     res.status(200).json(result);
